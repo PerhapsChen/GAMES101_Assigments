@@ -1,4 +1,3 @@
-
 #pragma warning( disable : 4305 )
 
 #include <iostream>
