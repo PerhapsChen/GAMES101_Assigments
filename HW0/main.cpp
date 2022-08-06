@@ -3,8 +3,8 @@
 #include<Eigen/Dense>
 #include<iostream>
 
-int main(){
-
+int main()
+{
     // Basic Example of cpp
     std::cout << "Example of cpp \n";
     float a = 1.0, b = 2.0;
@@ -43,7 +43,10 @@ int main(){
     // matrix scalar multiply i * 2.0
     // matrix multiply i * j
     // matrix multiply vector i * v
-
+    std::cout << i + j << std::endl;
+    std::cout << i * 2.0 << std::endl;
+    std::cout << i * j << std::endl;
+    std::cout << i * v << std::endl;
 
     /* 
     * PA 0
