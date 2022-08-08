@@ -170,8 +170,8 @@ static std::tuple<float, float, float> computeBarycentric2D(float x, float y, co
     return {c1,c2,c3};
 }
 
-void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList) {
-
+void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList) 
+{
     float f1 = (50 - 0.1) / 2.0;
     float f2 = (50 + 0.1) / 2.0;
 
@@ -323,17 +323,10 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
 
         }
     }
-
-
-
-
-
     // Use: fragment_shader_payload payload( interpolated_color, interpolated_normal.normalized(), interpolated_texcoords, texture ? &*texture : nullptr);
     // Use: payload.view_pos = interpolated_shadingcoords;
     // Use: Instead of passing the triangle's color directly to the frame buffer, pass the color to the shaders first to get the final color;
     // Use: auto pixel_color = fragment_shader(payload);
-
- 
 }
 
 void rst::rasterizer::set_model(const Eigen::Matrix4f& m)
