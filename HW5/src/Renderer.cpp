@@ -142,11 +142,11 @@ Vector3f castRay(
                 Vector3f reflectionDirection = normalize(reflect(dir, N));
                 Vector3f refractionDirection = normalize(refract(dir, N, payload->hit_obj->ior));
                 Vector3f reflectionRayOrig = (dotProduct(reflectionDirection, N) < 0) ?
-                                             hitPoint - N * scene.epsilon :
-                                             hitPoint + N * scene.epsilon;
+                                                hitPoint - N * scene.epsilon :
+                                                hitPoint + N * scene.epsilon;
                 Vector3f refractionRayOrig = (dotProduct(refractionDirection, N) < 0) ?
-                                             hitPoint - N * scene.epsilon :
-                                             hitPoint + N * scene.epsilon;
+                                                hitPoint - N * scene.epsilon :
+                                                hitPoint + N * scene.epsilon;
                 Vector3f reflectionColor = castRay(reflectionRayOrig, reflectionDirection, scene, depth + 1);
                 Vector3f refractionColor = castRay(refractionRayOrig, refractionDirection, scene, depth + 1);
                 float kr = fresnel(dir, N, payload->hit_obj->ior);
@@ -158,12 +158,12 @@ Vector3f castRay(
                 float kr = fresnel(dir, N, payload->hit_obj->ior);
                 Vector3f reflectionDirection = reflect(dir, N);
                 Vector3f reflectionRayOrig = (dotProduct(reflectionDirection, N) < 0) ?
-                                             hitPoint + N * scene.epsilon :
-                                             hitPoint - N * scene.epsilon;
+                                                hitPoint + N * scene.epsilon :
+                                                hitPoint - N * scene.epsilon;
                 hitColor = castRay(reflectionRayOrig, reflectionDirection, scene, depth + 1) * kr;
                 break;
             }
-            default:
+            default: // DIFFUSE_AND_GLOSSY
             {
                 // [comment]
                 // We use the Phong illumation model int the default case. The phong model
@@ -171,8 +171,8 @@ Vector3f castRay(
                 // [/comment]
                 Vector3f lightAmt = 0, specularColor = 0;
                 Vector3f shadowPointOrig = (dotProduct(dir, N) < 0) ?
-                                           hitPoint + N * scene.epsilon :
-                                           hitPoint - N * scene.epsilon;
+                                            hitPoint + N * scene.epsilon:
+                                            hitPoint - N * scene.epsilon;
                 // [comment]
                 // Loop over all lights in the scene and sum their contribution up
                 // We also apply the lambert cosine law
@@ -230,7 +230,14 @@ void Renderer::Render(const Scene& scene)
             // Also, don't forget to multiply both of them with the variable *scale*, and
             // x (horizontal) variable with the *imageAspectRatio*            
 
-            Vector3f dir = Vector3f(x, y, -1); // Don't forget to normalize this direction!
+            // inv Transform of ViewPort
+            float nx = (i + 0.5f) * 2 /scene.width -1.f;
+            float ny = (j + 0.5f) * 2 /scene.height -1.f;
+
+            x = nx * scale * imageAspectRatio;
+            y = -ny * scale;
+
+            Vector3f dir = normalize(Vector3f(x, y, -1)); // Don't forget to normalize this direction!
             framebuffer[m++] = castRay(eye_pos, dir, scene, 0);
         }
         UpdateProgress(j / (float)scene.height);

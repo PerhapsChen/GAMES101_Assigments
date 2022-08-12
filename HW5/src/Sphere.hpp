@@ -15,6 +15,7 @@ public:
     bool intersect(const Vector3f& orig, const Vector3f& dir, float& tnear, uint32_t&, Vector2f&) const override
     {
         // analytic solution
+        // (o+td-c)2-R2=0 -> t
         Vector3f L = orig - center;
         float a = dotProduct(dir, dir);
         float b = 2 * dotProduct(dir, L);
