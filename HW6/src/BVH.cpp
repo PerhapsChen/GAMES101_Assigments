@@ -33,7 +33,8 @@ BVHBuildNode* BVHAccel::recursiveBuild(std::vector<Object*> objects)
     Bounds3 bounds;
     for (int i = 0; i < objects.size(); ++i)
         bounds = Union(bounds, objects[i]->getBounds());
-    if (objects.size() == 1) {
+    if (objects.size() == 1) 
+    {
         // Create leaf _BVHBuildNode_
         node->bounds = objects[0]->getBounds();
         node->object = objects[0];
@@ -48,13 +49,15 @@ BVHBuildNode* BVHAccel::recursiveBuild(std::vector<Object*> objects)
         node->bounds = Union(node->left->bounds, node->right->bounds);
         return node;
     }
-    else {
+    else 
+    {
         Bounds3 centroidBounds;
         for (int i = 0; i < objects.size(); ++i)
             centroidBounds =
                 Union(centroidBounds, objects[i]->getBounds().Centroid());
         int dim = centroidBounds.maxExtent();
-        switch (dim) {
+        switch (dim) 
+        {
         case 0:
             std::sort(objects.begin(), objects.end(), [](auto f1, auto f2) {
                 return f1->getBounds().Centroid().x <
@@ -105,5 +108,21 @@ Intersection BVHAccel::Intersect(const Ray& ray) const
 Intersection BVHAccel::getIntersection(BVHBuildNode* node, const Ray& ray) const
 {
     // TODO Traverse the BVH to find intersection
-
+    Intersection result;
+    std::array<int, 3> dirIsNeg = {int(ray.direction.x < 0),
+                                   int(ray.direction.y < 0),
+                                   int(ray.direction.z < 0)};
+    if(!node->bounds.IntersectP(ray, ray.direction_inv, dirIsNeg))
+    {
+        return result;
+    }
+    if(node->left == nullptr && node->right == nullptr)
+    {
+        result = node->object->getIntersection(ray);
+        return result;
+    }
+    auto leftP = getIntersection(node->left, ray);
+    auto rightP = getIntersection(node->right, ray);
+    
+    return leftP.distance < rightP.distance? leftP: rightP;
 }

@@ -104,7 +104,7 @@ inline bool Bounds3::IntersectP(const Ray& ray, const Vector3f& invDir,
     {
         float min = (pMin[i] - ray.origin[i]) * invDir[i];
         float max = (pMax[i] - ray.origin[i]) * invDir[i];
-        if(dirIsNeg[i]!=1)
+        if(dirIsNeg[i])
         {
             std::swap(min, max);
         }
